@@ -25,14 +25,14 @@ private slots:
 
 private:
     void map();
-    void line(QPainterPath &p, QVector<QPointF> &v, QJsonArray *r);
+    void line(QPainterPath &p, QVector<QPointF> &v, QVector<QJsonArray> r, int size);
 private:
     QString filepath;
     QJsonObject obj;
     GraphicScen scene;
     QPainterPath p1, p2, p3;
     QVector<QPointF> v1, v2, v3;
-    QJsonArray object[3];
+    QVector<QJsonArray> arr;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

@@ -9,7 +9,6 @@
 #include<QPainterPath>
 #include<QGraphicsPolygonItem>
 #include<QFile>
-#include<QPen>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,6 +21,13 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+const char* convertStr(QString str){
+    QByteArray bytes = str.toUtf8();
+    const char* charstr;
+    charstr = bytes.constData();
+    return charstr;
 }
 
 void MainWindow::onopenfile()
@@ -38,42 +44,43 @@ void MainWindow::onopenfile()
         obj = doc.object();
         qDebug()<<obj.keys();
         f.close();
-        object[0] = obj["road1"].toArray();
-        object[1] = obj["road2"].toArray();
-        object[2] = obj["road3"].toArray();
-        map();
-        line(p1,v1,object);
+        int size = obj.keys().size();
+        QString road = "road";
+        for (int i = 0; i<size;i++){
+            std::string s = (road + QLocale().toString(i + 1)).toStdString();
+            arr.push_back(obj[s.c_str()].toArray());
+            qDebug() << obj[QString("road") + QChar(i + 1)];
+        }
+
+        line(p1,v1, arr, size);
     }
 
 }
-void MainWindow::map(){
-    QJsonArray r1 = obj["road1"].toArray();
-    QJsonArray r2 = obj["road2"].toArray();
-    QJsonArray r3 = obj["road3"].toArray();
 
-}
-
-void MainWindow::line(QPainterPath &p, QVector<QPointF> &v, QJsonArray *r){
+void MainWindow::line(QPainterPath &p, QVector<QPointF> &v, QVector<QJsonArray> r, int size){
     double k = 3;
-    for(int i = 0; i<3; i++){
-        for(int j = 0; j < r[i].count(); j++){
+    for(int i = 0; i<size; i++){
 
-            QJsonObject pointobj1 = r[i][j].toObject();
-            QPointF point(pointobj1["x"].toDouble()*k, pointobj1["y"].toDouble()*k);
-            v.append(point);
-            if(j==0 ){
-                p.moveTo(point);
-            }else{
-                p.lineTo(point);
-            }
-        }
+          for(int j = 0; j < r[i].count(); j++){
+
+              QJsonArray ja = r[i];
+              QJsonObject pointobj1 = ja[j].toObject();
+              QPointF point(pointobj1["x"].toDouble()*k, pointobj1["y"].toDouble()*k);
+                    v.append(point);
+                    if(j==0 ){
+                        p.moveTo(point);
+                    }else{
+                        p.lineTo(point);
+                    }
+                }
+
+
+    }
         scene.addPath(p);
         scene.setV1(v);
         scene.setV2(v);
         scene.setV3(v);
 
 
-    }
 }
-
 
