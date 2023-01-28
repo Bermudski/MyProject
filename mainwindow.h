@@ -4,6 +4,7 @@
 #include<QJsonObject>
 #include"graphicscen.h"
 #include<QGraphicsView>
+#include<QJsonArray>
 
 
 #include <QMainWindow>
@@ -24,11 +25,14 @@ private slots:
 
 private:
     void map();
+    void line(QPainterPath &p, QVector<QPointF> &v, QJsonArray *r);
 private:
     QString filepath;
     QJsonObject obj;
     GraphicScen scene;
-
+    QPainterPath p1, p2, p3;
+    QVector<QPointF> v1, v2, v3;
+    QJsonArray object[3];
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

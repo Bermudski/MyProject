@@ -68,8 +68,6 @@ void GraphicScen::getmin(QVector<QPointF> &v, QPointF &p){
     }
 }
 
-
-
 void GraphicScen::setV3(const QVector<QPointF> &newV3)
 {
     v3 = newV3;
